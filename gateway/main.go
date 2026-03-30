@@ -48,7 +48,7 @@ func main() {
 
 
 
-	err := godotenv.Load("/home/one/GoPy/.env")
+	err := godotenv.Load("../.env")
 	if err != nil {
 		log.Println("error in loading the env file")
 	}
