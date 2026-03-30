@@ -47,13 +47,7 @@ type MusicResponse struct {
 func main() {
 
 
-	go func() {
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        w.Write([]byte("I am awake!"))
-    })
-    // Hugging Face strictly requires port 7860
-    http.ListenAndServe("0.0.0.0:7860", nil) 
-}()
+
 	err := godotenv.Load("/home/one/GoPy/.env")
 	if err != nil {
 		log.Println("error in loading the env file")
