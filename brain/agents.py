@@ -7,8 +7,9 @@ from tools import daily_leetcode
 
 
 # 1. Load your .env file
-load_dotenv('/home/one/GoPy/.env')
+dotenv_path = os.path.join(base_dir, "..", ".env")
 
+load_dotenv(dotenv_path)
 # 2. Route Pydantic-AI to GitHub's free servers (No Tor proxies!)
 os.environ["OPENAI_API_KEY"] = os.getenv('GITHUB_TOKEN')
 os.environ["OPENAI_BASE_URL"] = "https://models.inference.ai.azure.com"
