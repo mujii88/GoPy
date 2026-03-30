@@ -12,10 +12,9 @@ import re
 import html
 
 
-load_dotenv('/home/one/GoPy/.env')
+dotenv_path = os.path.join(base_dir, "..", ".env")
 
-
-
+load_dotenv(dotenv_path)
 news_api=os.getenv("NEWS_API_KEY")
 
 async def fetch_news(query="AI"):
