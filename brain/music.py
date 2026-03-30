@@ -17,7 +17,7 @@ async def download_song(song_name: str) -> str:
                 'preferredcodec': 'mp3',
                 'preferredquality': '192', 
             }],
-            'outtmpl': f'/home/one/GoPy/brain/{safe_name}.%(ext)s', 
+            'outtmpl': f'brain/{safe_name}.%(ext)s', 
             'restrictfilenames': False, 
             'noplaylist': True,        
             'quiet': True,             
