@@ -20,55 +20,43 @@ Hosting YouTube downloaders on cloud providers (Azure, AWS, DigitalOcean) is a n
 If you try to move standard `yt-dlp` scripts to a mobile device (Termux), they usually crash due to spotty cell service, 60-second timeouts, and memory leaks.
 
 ## ⚡ The Solution: Mobile-First Architecture
-This project is a custom Go/Python hybrid gateway specifically designed to run on **Termux**. By using your phone's Residential/Mobile IP, the bot becomes invisible to YouTube's security blocks, while the aggressive network armor prevents mobile connection drops.
+This project is a custom Go/Python hybrid gateway specifically designed to run natively on **Termux**. By using your phone's Residential/Mobile IP network, the bot becomes invisible to YouTube's security blocks, while the custom network armor prevents mobile connection drops.
 
 ### ✨ Core Features
 * 🛡️ **Zero Mobile Timeouts:** Hardcoded 180-second timeouts with 15-retry chunk network armor.
-* 🎵 **True V0 MP3 Quality:** Forces FFmpeg to extract and encode at the highest Variable Bitrate without the dreaded `file.mp3.mp3` double-extension bug.
+* 🎵 **True V0 MP3 Quality:** Forces FFmpeg to extract and encode at the highest Variable Bitrate without the dreaded double-extension bug.
 * 🧹 **Scorched-Earth Process Management:** Includes a custom `start.sh` script that hunts down and kills zombie Go/Python processes to prevent Termux memory leaks.
 * 💸 **Zero Cloud Costs:** Runs 100% locally on your device.
 
 ---
+
 ## 🛠️ Installation & Setup
 
-<details>
-<summary><b>📱 Step 1: Termux Preparation</b> <i>(Click to expand)</i></summary>
-
+### 📱 Step 1: Termux Preparation
 First, ensure your Termux is updated and has access to your phone's internal storage so it can save the music.
-
 ```bash
 pkg update && pkg upgrade -y
 termux-setup-storage
-</details>
-
-<details>
-<summary><b>⚙️ Step 2: Install Dependencies</b> <i>(Click to expand)</i></summary>
-
+⚙️ Step 2: Install Dependencies
 Install the required programming languages and media encoding engines.
 
 Bash
 pkg install python ffmpeg golang git -y
 pip install yt-dlp
-</details>
-
-<details>
-<summary><b>🔗 Step 3: Clone & Configure</b> <i>(Click to expand)</i></summary>
-
-Pull this repository directly to your device:
+🔗 Step 3: Clone & Configure
+Pull this repository directly to your device and navigate into the folder:
 
 Bash
 git clone [https://github.com/mujii88/GoPy.git](https://github.com/mujii88/GoPy.git)
 cd GoPy
 💡 PRO TIP: Adding Your Bot Token
-To avoid environment variable (.env) loading errors on Termux, the safest method is to hardcode your token.
-Open gateway/main.go and replace the token placeholder directly with your actual Telegram Bot Token from BotFather!
-
-</details>
+To avoid environment variable (.env) loading errors in Termux, the safest method is to hardcode your token.
+Open gateway/main.go using a terminal editor like nano and replace the token placeholder directly with your actual Telegram Bot Token from BotFather!
 
 🚀 Running the Bot
 ⚠️ IMPORTANT: Do not run the Go and Python files manually!
 
-Use the provided startup script. This script acts as a process manager: it automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system without memory leaks.
+Use the provided startup script. This script acts as your system's process manager: it automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system without memory leaks.
 
 Bash
 cd ~/GoPy
