@@ -74,6 +74,3 @@ They are stored here temporarily before being securely transmitted back to you v
 ⚠️ Disclaimer
 This tool is provided for educational purposes and personal archiving only. Please respect the terms of service of the platforms you interact with and only download content you have the right to access.
 
-<div align="center">
-<i>Engineered for stability. Built to bypass the bans.</i>
-</div>
