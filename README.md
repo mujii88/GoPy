@@ -32,45 +32,91 @@ This project is a custom Go/Python hybrid gateway specifically designed to run n
 
 ## 🛠️ Installation & Setup
 
-### 📱 Step 1: Termux Preparation
-First, ensure your Termux is updated and has access to your phone's internal storage so it can save the music.
+### 📱 Step 1: Prepare Your Termux Environment
+Before installing the bot, we need to ensure your Termux is updated and has access to your phone's internal storage so it can save the music.
+
+**1. Update the package lists and upgrade existing software:**
+*(This makes sure you have the latest, most secure versions of everything).*
 ```bash
 pkg update && pkg upgrade -y
+
+```
+
+### 2. Grant storage permissions:
+(A popup will appear on your phone asking for permission. Click "Allow" so the bot can save MP3s).
+
+```bash
 termux-setup-storage
-⚙️ Step 2: Install Dependencies
+```
+⚙️ Step 2: Install the Core Engines
+This bot relies on a few heavy-duty tools to process audio and handle the Telegram gateway. We will install them in stages.
 
+1. Install Git and Go:
+(Git lets you download this repository, and Go is required to compile the high-speed Telegram gateway).
 
-Install the required programming languages and media encoding engines.
+```Bash
+pkg install git golang -y
+```
+2. Install Python and FFmpeg:
+(Python runs the download scripts, and FFmpeg is the engine that converts the raw video into a high-quality V0 MP3).
 
-Bash
-pkg install python ffmpeg golang git -y
+```Bash
+pkg install python ffmpeg -y
+```
+3. Install the Downloader Library:
+(This installs yt-dlp, the core python library we use to communicate with YouTube).
+
+```Bash
 pip install yt-dlp
-🔗 Step 3: Clone & Configure
-Pull this repository directly to your device and navigate into the folder:
+```
+🔗 Step 3: Download & Configure the Bot
+1. Clone the repository to your phone:
 
-Bash
+```Bash
 git clone https://github.com/mujii88/GoPy.git
-cd GoPy
+```
+2. Navigate into the new folder:
 
-💡 PRO TIP: Adding Your Bot Token
-To avoid environment variable (.env) loading errors in Termux, the safest method is to hardcode your token.
-Open gateway/main.go using a terminal editor like nano and replace the token placeholder directly with your actual Telegram Bot Token from BotFather!
+```Bash
+cd GoPy
+```
+💡 PRO TIP: Adding Your Bot Token safely
+To avoid environment variable (.env) loading errors on Termux, the safest method is to hardcode your token directly into the Go script.
+
+Type nano gateway/main.go to open the file in the terminal editor.
+
+Find the token placeholder and replace it with your actual Telegram Bot Token from BotFather.
+
+Press CTRL + X, then type Y, and hit Enter to save and exit.
 
 🚀 Running the Bot
 ⚠️ IMPORTANT: Do not run the Go and Python files manually!
 
-Use the provided startup script. This script acts as your system's process manager: it automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system without memory leaks.
+We have included a custom startup script (start.sh) that acts as your system's process manager. It automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system without memory leaks.
+```
 
-Bash
-cd ~/GoPy
+```
+1. Make the script executable:
+(You only have to run this command once)
+
+```Bash
 chmod +x start.sh
+```
+2. Launch the Bot:
+(Run this command whenever you want to turn the bot on)
+
+```Bash
 ./start.sh
+```
 📂 Where does the music go?
-Downloaded .mp3 files are saved directly to the absolute Termux path:
+Downloaded .mp3 files are saved directly to this absolute Termux path:
 /data/data/com.termux/files/home/GoPy
 
-They are stored here temporarily before being securely transmitted back to you via the Telegram API.
-
+They are stored here temporarily before being securely transmitted back to you via the Telegram API, after which they are automatically cleaned up.
+```
+```
 ⚠️ Disclaimer
 This tool is provided for educational purposes and personal archiving only. Please respect the terms of service of the platforms you interact with and only download content you have the right to access.
+
+
 
