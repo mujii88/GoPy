@@ -29,11 +29,10 @@ This project is a custom Go/Python hybrid gateway specifically designed to run o
 * 💸 **Zero Cloud Costs:** Runs 100% locally on your device.
 
 ---
-
 ## 🛠️ Installation & Setup
 
 <details>
-<summary><b>Step 1: Termux Preparation</b> (Click to expand)</summary>
+<summary><b>📱 Step 1: Termux Preparation</b> <i>(Click to expand)</i></summary>
 
 First, ensure your Termux is updated and has access to your phone's internal storage so it can save the music.
 
@@ -43,9 +42,9 @@ termux-setup-storage
 </details>
 
 <details>
-<summary><b>Step 2: Install Dependencies</b> (Click to expand)</summary>
+<summary><b>⚙️ Step 2: Install Dependencies</b> <i>(Click to expand)</i></summary>
 
-Install the required languages and media encoding engines.
+Install the required programming languages and media encoding engines.
 
 Bash
 pkg install python ffmpeg golang git -y
@@ -53,29 +52,33 @@ pip install yt-dlp
 </details>
 
 <details>
-<summary><b>Step 3: Clone & Configure</b> (Click to expand)</summary>
+<summary><b>🔗 Step 3: Clone & Configure</b> <i>(Click to expand)</i></summary>
 
-Pull this repository and set up your Telegram Bot Token.
+Pull this repository directly to your device:
 
 Bash
 git clone [https://github.com/mujii88/GoPy.git](https://github.com/mujii88/GoPy.git)
 cd GoPy
-
-# Create your environment file
-echo "BOT_TOKEN=your_telegram_bot_token_here" > .env
-(Note: Replace your_telegram_bot_token_here with the token you get from BotFather on Telegram).
+💡 PRO TIP: Adding Your Bot Token
+To avoid environment variable (.env) loading errors on Termux, the safest method is to hardcode your token.
+Open gateway/main.go and replace the token placeholder directly with your actual Telegram Bot Token from BotFather!
 
 </details>
 
 🚀 Running the Bot
-Do not run the Go and Python files manually. Use the provided startup script. This script automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system.
+⚠️ IMPORTANT: Do not run the Go and Python files manually!
+
+Use the provided startup script. This script acts as a process manager: it automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system without memory leaks.
 
 Bash
 cd ~/GoPy
 chmod +x start.sh
 ./start.sh
 📂 Where does the music go?
-Downloaded .mp3 files are saved directly to the absolute Termux path (/data/data/com.termux/files/home/GoPy) before being securely transmitted back to you via the Telegram API.
+Downloaded .mp3 files are saved directly to the absolute Termux path:
+/data/data/com.termux/files/home/GoPy
+
+They are stored here temporarily before being securely transmitted back to you via the Telegram API.
 
 ⚠️ Disclaimer
 This tool is provided for educational purposes and personal archiving only. Please respect the terms of service of the platforms you interact with and only download content you have the right to access.
