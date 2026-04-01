@@ -1,5 +1,3 @@
-
-Markdown
 <div align="center">
 
 # 🎧 Bulletproof Termux Music Bot
