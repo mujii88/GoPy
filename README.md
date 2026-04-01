@@ -38,6 +38,8 @@ First, ensure your Termux is updated and has access to your phone's internal sto
 pkg update && pkg upgrade -y
 termux-setup-storage
 ⚙️ Step 2: Install Dependencies
+
+
 Install the required programming languages and media encoding engines.
 
 Bash
@@ -47,8 +49,9 @@ pip install yt-dlp
 Pull this repository directly to your device and navigate into the folder:
 
 Bash
-git clone [https://github.com/mujii88/GoPy.git](https://github.com/mujii88/GoPy.git)
+git clone https://github.com/mujii88/GoPy.git
 cd GoPy
+
 💡 PRO TIP: Adding Your Bot Token
 To avoid environment variable (.env) loading errors in Termux, the safest method is to hardcode your token.
 Open gateway/main.go using a terminal editor like nano and replace the token placeholder directly with your actual Telegram Bot Token from BotFather!
