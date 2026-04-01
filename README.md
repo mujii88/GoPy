@@ -93,9 +93,6 @@ Press CTRL + X, then type Y, and hit Enter to save and exit.
 ⚠️ IMPORTANT: Do not run the Go and Python files manually!
 
 We have included a custom startup script (start.sh) that acts as your system's process manager. It automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system without memory leaks.
-```
-
-```
 1. Make the script executable:
 (You only have to run this command once)
 
@@ -113,8 +110,7 @@ Downloaded .mp3 files are saved directly to this absolute Termux path:
 /data/data/com.termux/files/home/GoPy
 
 They are stored here temporarily before being securely transmitted back to you via the Telegram API, after which they are automatically cleaned up.
-```
-```
+
 ⚠️ Disclaimer
 This tool is provided for educational purposes and personal archiving only. Please respect the terms of service of the platforms you interact with and only download content you have the right to access.
 
