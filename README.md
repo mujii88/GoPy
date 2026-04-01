@@ -79,6 +79,7 @@ git clone https://github.com/mujii88/GoPy.git
 
 ```Bash
 cd GoPy
+pip install -r brain/requirements.txt
 ```
 💡 PRO TIP: Adding Your Bot Token safely
 To avoid environment variable (.env) loading errors on Termux, the safest method is to hardcode your token directly into the Go script.
