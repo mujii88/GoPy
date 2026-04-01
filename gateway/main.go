@@ -22,7 +22,7 @@ type MusicResponse struct {
 
 func main() {
 	// The Brute Force Token
-	token := "8659626163:AAGB9dEpUbf2rsnMSzLudlJLes8scu5H5DM"
+	token := "Put_your_Telegram_Bot_token_here"
 
 	// 5-Minute Timeout for slow uploads
 	client := &http.Client{
