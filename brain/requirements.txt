@@ -1,6 +1,9 @@
+
+
+
 fastapi
 uvicorn
-pydantic-ai
+pydantic-ai-slim
 python-dotenv
 httpx
 google-api-python-client

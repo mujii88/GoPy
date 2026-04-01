@@ -1,218 +1,121 @@
+
 package main
 
 import (
 	"encoding/json"
-	"io"
+	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"strings"
-	"html"
 	"net/url"
-	
-
+	"os"
+	"regexp"
+	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/joho/godotenv"
 )
 
-// --- Define the Structures to match Python's JSON ---
-type NewsItem struct {
-	Title       string `json:"title"`
-	URL         string `json:"url"`
-	Time        string `json:"time"`
-	Description string `json:"description"`
-}
-
-type GopyReport struct {
-	Category    string     `json:"category"`
-	NewsUpdates []NewsItem `json:"news_updates"`
-	DailyAdvice string     `json:"daily_advice"`
-}
-
-
-type LeetCodeBriefing struct{
-	QuestionTitle string `json:"question_title"`
-	QuestionDifficulty string `json:"question_difficulty"`
-	QuestionContent string `json:"question_content"`
-}
-
-
 type MusicResponse struct {
-    Status  string `json:"status"`
-    File    string `json:"file"`
-    Message string `json:"message"`
+	Status  string `json:"status"`
+	File    string `json:"file"`
+	Message string `json:"message"`
 }
 
 func main() {
+	// The Brute Force Token
+	token := "8659626163:AAGB9dEpUbf2rsnMSzLudlJLes8scu5H5DM"
 
-
-
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Println("error in loading the env file")
+	// 5-Minute Timeout for slow uploads
+	client := &http.Client{
+		Timeout: 300 * 1000000000, 
 	}
 
-	bottoken := os.Getenv("TELEGRAM_BOT_TOKEN")
-	if bottoken == "" {
-		log.Fatal("telegram bot token is empty in env file")
-	}
-
-	bot, err := tgbotapi.NewBotAPI(bottoken)
+	bot, err := tgbotapi.NewBotAPIWithClient(token, tgbotapi.APIEndpoint, client)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	log.Printf("Gateway online......")
+	bot.Debug = false
+	log.Printf("✅ Authorized on account: @%s", bot.Self.UserName)
+	log.Println("🚀 GoPy Music Gateway is LIVE on Termux!")
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
-
 	updates := bot.GetUpdatesChan(u)
 
 	for update := range updates {
-		if update.Message == nil {
+		if update.Message == nil || !update.Message.IsCommand() {
 			continue
 		}
 
-		if !update.Message.IsCommand() {
-			continue
-		}
+		chatID := update.Message.Chat.ID
+		command := update.Message.Command()
+		args := update.Message.CommandArguments()
 
-		// Prepare the default response message object
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
+		switch command {
 
-		switch update.Message.Command() {
 		case "start":
-			msg.Text = "Hello Buddy! your GOPY is ready so send the tasks you need to be done"
-
-		case "report":
-			// 1. Send the "waiting" message immediately so the user knows it's working
-			waitMsg := tgbotapi.NewMessage(update.Message.Chat.ID, "📡 Pinging the Python Brain... Grab a cup of coffee...")
-			bot.Send(waitMsg)
-
-			// 2. Fetch data from the Python Brain
-			resp, err := http.Get("http://localhost:8000/brief")
-
-			if err != nil {
-				msg.Text = "❌ Error: Could not reach the Python Brain."
-			} else {
-				defer resp.Body.Close()
-				body, _ := io.ReadAll(resp.Body)
-
-				// 3. Parse the JSON into our Go structs
-				var report GopyReport
-				err = json.Unmarshal(body, &report)
-				if err != nil {
-					msg.Text = "❌ Gopy encountered an error formatting the report."
-				} else {
-					// 4. Build the beautiful HTML string
-					var finalMsg string
-					finalMsg += "⚡ <b>" + strings.ToUpper(report.Category) + "</b> ⚡\n\n"
-
-					if len(report.NewsUpdates) > 0 {
-						finalMsg += "🗞 <b>LATEST TECH & AI NEWS</b>\n"
-						for _, item := range report.NewsUpdates {
-							finalMsg += "▪️ <b><a href=\"" + item.URL + "\">" + item.Title + "</a></b>\n"
-							finalMsg += "<i>" + item.Description + "</i>\n\n"
-						}
-					} else {
-						finalMsg += "🗞 <i>No new updates right now.</i>\n\n"
-					}
-
-					finalMsg += "💡 <b>DAILY ADVICE</b>\n"
-					finalMsg += "<i>" + report.DailyAdvice + "</i>"
-
-					// 5. Apply the HTML formatting to the Telegram message
-					msg.Text = finalMsg
-					msg.ParseMode = "HTML"
-					msg.DisableWebPagePreview = true
-				}
-			}
-
-
-		
-		case "leetcode":
-
-			waitmsg:=tgbotapi.NewMessage(update.Message.Chat.ID,"📡 Getting the data for your daily leetcode dose.....")
-			bot.Send(waitmsg)
-
-			resp,err:=http.Get("http://localhost:8000/leetcode")
-			if err!=nil{
-				msg.Text="❌ Error: Could not reach the Python Brain."
-			}else{
-				defer resp.Body.Close()
-				body,_:=io.ReadAll(resp.Body)
-
-				var leetcode LeetCodeBriefing
-				err=json.Unmarshal(body,&leetcode)
-				if err!=nil{
-					msg.Text="❌ Gopy encountered an error formatting the report."
-				}else{
-					var finalMsg string
-					finalMsg+="⚡ "+strings.ToUpper(leetcode.QuestionTitle)+" ⚡\n\n"
-					finalMsg+="💡 <b>"+leetcode.QuestionDifficulty+"</b>\n"
-					finalMsg += html.EscapeString(leetcode.QuestionContent)
-					
-
-					// 5. Apply the HTML formatting to the Telegram message
-					msg.Text = finalMsg
-					msg.ParseMode = "HTML"
-					msg.DisableWebPagePreview = true
-				}
-			}
-
+			msg := tgbotapi.NewMessage(chatID, "👋 Welcome to the GoPy Music Bot!\n\n🎧 Just type `/play <song name>` and I will fetch it for you.")
+			bot.Send(msg)
 
 		case "play":
-			songName := update.Message.CommandArguments()
-            if songName == "" {
-                msg.Text = "❌ Please provide a song name! Example: /play Linkin Park Numb"
-                bot.Send(msg)
-                continue
-            }
+			if strings.TrimSpace(args) == "" {
+				bot.Send(tgbotapi.NewMessage(chatID, "⚠️ Please tell me what to play! Example: `/play faded`"))
+				continue
+			}
 
-            waitMsg := tgbotapi.NewMessage(update.Message.Chat.ID, "🎧 Hijacking YouTube stream... Give me a few seconds!")
-            bot.Send(waitMsg)
+			statusMsg := tgbotapi.NewMessage(chatID, fmt.Sprintf("🔍 Searching for: *%s*...\n⏳ Please wait a moment!", args))
+			statusMsg.ParseMode = "Markdown"
+			sentStatus, _ := bot.Send(statusMsg)
 
-            // Encode the URL (Turns "Anarkali disco chali" into "Anarkali+disco+chali")
-            safeSongName := url.QueryEscape(songName)
+			apiURL := fmt.Sprintf("http://127.0.0.1:8000/music?song=%s", url.QueryEscape(args))
+			resp, err := http.Get(apiURL)
 
-            // Ping the Python Brain
-            resp, err := http.Get("http://localhost:8000/music?song=" + safeSongName)
-            if err != nil {
-                msg.Text = "❌ Error: Could not reach the Python Brain."
-                bot.Send(msg)
-                continue
-            }
-            defer resp.Body.Close()
+			if err != nil {
+				bot.Send(tgbotapi.NewEditMessageText(chatID, sentStatus.MessageID, "❌ Gateway Error: Could not connect to the Python Brain."))
+				continue
+			}
+			defer resp.Body.Close()
 
-            body, _ := io.ReadAll(resp.Body)
-            var musicRes MusicResponse
-            json.Unmarshal(body, &musicRes)
+			var musicResp MusicResponse
+			if err := json.NewDecoder(resp.Body).Decode(&musicResp); err != nil {
+				bot.Send(tgbotapi.NewEditMessageText(chatID, sentStatus.MessageID, "❌ Gateway Error: Invalid response from Brain."))
+				continue
+			}
 
-            if musicRes.Status == "success" {
-                // Send the local MP3 file directly as a Telegram Audio track
-                audioMsg := tgbotapi.NewAudio(update.Message.Chat.ID, tgbotapi.FilePath(musicRes.File))
-				audioMsg.Title = songName        
-                audioMsg.Performer = "GoPy API"
-                bot.Send(audioMsg)
+			if musicResp.Status != "success" {
+				bot.Send(tgbotapi.NewEditMessageText(chatID, sentStatus.MessageID, fmt.Sprintf("❌ Could not download: %s", musicResp.Message)))
+				continue
+			}
 
-                // CRITICAL: Delete the file from your computer immediately after sending!
-                os.Remove(musicRes.File)
-                
-                // We successfully sent an audio message, so we continue the loop to avoid sending a blank text message at the bottom
-                continue 
-            } else {
-                msg.Text = "❌ Failed to rip audio: " + musicRes.Message
-            }
+			bot.Send(tgbotapi.NewEditMessageText(chatID, sentStatus.MessageID, "☁️ Song downloaded! Uploading to Telegram..."))
+
+			// 🕵️‍♂️ THE "MESSY PYTHON" FIX
+			// If Python sends a dictionary inside the file variable, extract the real path!
+			actualPath := musicResp.File
+			if strings.Contains(actualPath, `"file"`) {
+				re := regexp.MustCompile(`"file":\s*"([^"]+)"`)
+				match := re.FindStringSubmatch(actualPath)
+				if len(match) > 1 {
+					actualPath = match[1] // Grab just the clean file path
+				}
+			}
+			actualPath = strings.TrimSpace(actualPath)
+
+			// Upload using the clean path
+			audio := tgbotapi.NewAudio(chatID, tgbotapi.FilePath(actualPath))
+			audio.Caption = fmt.Sprintf("🎧 Enjoy your track: %s", args)
+			
+			_, err = bot.Send(audio)
+			if err != nil {
+				log.Printf("Upload failed: %v", err)
+				bot.Send(tgbotapi.NewMessage(chatID, fmt.Sprintf("❌ Upload failed: %v", err)))
+			} else {
+				bot.Send(tgbotapi.NewDeleteMessage(chatID, sentStatus.MessageID))
+				os.Remove(actualPath) // Clean up the file so your phone doesn't run out of storage!
+			}
 
 		default:
-			msg.Text = "Unknown command. Use /start, /report, /leetcode, or /play <song_name>"
+			bot.Send(tgbotapi.NewMessage(chatID, "❓ I don't know that command. Try `/play`."))
 		}
-		// Send the final compiled message (either an error or the formatted report)
-		if _, err := bot.Send(msg); err != nil {
-			log.Println(err)
-		}
-
 	}
 }

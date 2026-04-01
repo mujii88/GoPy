@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from agents import gopy_agent,leetCode_agent
 from music import download_song
 import os
 
@@ -9,26 +8,6 @@ import os
 
 app=FastAPI()
 
-
-@app.get('/brief')
-async def get_briefing():
-    try:
-        result=await gopy_agent.run("Hy Gopy give the full morning report...")
-
-        return result.output.model_dump()
-    except Exception as e:
-        return {"error":f"Failed to generate briefing: {str(e)}"}
-
-
-
-@app.get('/leetcode')
-async def get_leetcode():
-    try:
-        result=await leetCode_agent.run()
-
-        return result.output.model_dump()
-    except Exception as e:
-        return {"error":f"Failed to generate briefing: {str(e)}"}
 
 
 @app.get('/music')
