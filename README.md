@@ -81,6 +81,20 @@ git clone https://github.com/mujii88/GoPy.git
 cd GoPy
 pip install -r brain/requirements.txt
 ```
+
+
+## 🛠️ Troubleshooting
+
+**Termux: Failed to build `pydantic-core` or `cryptography`**
+If you are running Python 3.13+ on Termux, `pip` may fail to build certain Rust-based dependencies from source. To fix this, you need to manually install Rust and declare your Android architecture before running the requirements file:
+
+```bash
+pkg install rust binutils -y
+export CARGO_BUILD_TARGET=aarch64-linux-android
+export ANDROID_API_LEVEL=24
+pip install pydantic-core
+pip install -r brain/requirements.txt
+
 💡 PRO TIP: Adding Your Bot Token safely
 To avoid environment variable (.env) loading errors on Termux, the safest method is to hardcode your token directly into the Go script.
 
