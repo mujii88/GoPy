@@ -94,6 +94,7 @@ export CARGO_BUILD_TARGET=aarch64-linux-android
 export ANDROID_API_LEVEL=24
 pip install pydantic-core
 pip install -r brain/requirements.txt
+```
 
 💡 PRO TIP: Adding Your Bot Token safely
 To avoid environment variable (.env) loading errors on Termux, the safest method is to hardcode your token directly into the Go script.
