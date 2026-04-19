@@ -110,7 +110,8 @@ Press CTRL + X, then type Y, and hit Enter to save and exit.
 ```
 🚀 Running the Bot
 ⚠️ IMPORTANT: Do not run the Go and Python files manually!
-We have included a custom startup script (start.sh) that acts as your system's process manager. It automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system without memory leaks.
+We have included a custom startup script (start.sh) that acts as your system's process manager.
+It automatically wipes out old ghost sessions, compiles the latest Go binary, and safely starts the system without memory leaks.
 ```
 1. Make the script executable:
 (You only have to run this command once)
